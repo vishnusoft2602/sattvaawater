@@ -108,12 +108,26 @@
     </div>
   </section>
 
- <form id="enquiryForm">
-  <input type="text" id="name" placeholder="Your Name" required />
-  <input type="tel" id="phone" placeholder="Your Phone Number" required />
-  <textarea id="message" rows="4" placeholder="Your Message"></textarea>
-  <button type="submit">Send Enquiry</button>
-</form>
+ <section class="contact" style="background-color:#f8fbff; padding:50px 20px; text-align:center;">
+  <h2 style="color:#004aad; font-size:2rem; margin-bottom:20px;">Enquiry Form</h2>
+  <p style="color:#333; font-size:1.1rem; margin-bottom:30px;">
+    Have a question or want to place an order? Fill out the form below and we’ll reach out to you shortly!
+  </p>
+
+  <form id="enquiryForm" style="max-width:500px; margin:0 auto; background:white; padding:30px; border-radius:15px; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+    <input type="text" id="name" placeholder="Your Name" required 
+           style="width:100%; padding:12px 15px; margin:10px 0; border:1px solid #ccc; border-radius:8px; font-size:1rem;" />
+    <input type="tel" id="phone" placeholder="Your Phone Number" required 
+           style="width:100%; padding:12px 15px; margin:10px 0; border:1px solid #ccc; border-radius:8px; font-size:1rem;" />
+    <textarea id="message" rows="4" placeholder="Your Message" 
+              style="width:100%; padding:12px 15px; margin:10px 0; border:1px solid #ccc; border-radius:8px; font-size:1rem;"></textarea>
+
+    <button type="submit" 
+            style="width:100%; background-color:#007BFF; color:white; border:none; padding:14px; border-radius:8px; font-size:1.1rem; cursor:pointer; transition:background-color 0.3s, transform 0.2s;">
+      Send Enquiry
+    </button>
+  </form>
+</section>
 
 <script>
   const form = document.getElementById('enquiryForm');
@@ -142,6 +156,11 @@
       alert('⚠️ Network error. Please try again later.');
     }
   });
+
+  // Add hover animation
+  const button = document.querySelector('button');
+  button.addEventListener('mouseover', () => button.style.backgroundColor = '#0056b3');
+  button.addEventListener('mouseout', () => button.style.backgroundColor = '#007BFF');
 </script>
 
 
