@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sattvaa Water | Purified Water in Bengaluru</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: #f7faff;
+      color: #333;
+    }
+    header {
+      background: linear-gradient(90deg, #007BFF, #00BFFF);
+      color: white;
+      text-align: center;
+      padding: 60px 20px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 3rem;
+    }
+    header p {
+      font-size: 1.2rem;
+      margin-top: 10px;
+    }
+    section {
+      padding: 60px 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .about, .products, .contact {
+      text-align: center;
+    }
+    .about p, .products p {
+      max-width: 700px;
+      margin: 20px auto;
+      line-height: 1.6;
+    }
+    .product-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 40px;
+    }
+    .product {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      width: 250px;
+    }
+    .product img {
+      width: 100%;
+      border-radius: 10px;
+    }
+    .product h3 {
+      color: #007BFF;
+      margin-top: 10px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      max-width: 400px;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    form input, form textarea {
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    form button {
+      background: #007BFF;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    form button:hover {
+      background: #0056b3;
+    }
+    footer {
+      background: #007BFF;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      margin-top: 60px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Sattvaa Water</h1>
+    <p>Purified Water | Bengaluru</p>
+  </header>
+
+  <section class="about">
+    <h2>About Us</h2>
+    <p>At <strong>Sattvaa Water</strong>, we believe that purity is the essence of life. Based in Bengaluru, we supply 100% purified drinking water bottles for homes, offices, and events — ensuring every drop you drink is safe, fresh, and full of vitality.</p>
+  </section>
+
+  <section class="products">
+    <h2>Our Products</h2>
+    <div class="product-list">
+      <div class="product">
+        <img src="https://cdn.pixabay.com/photo/2016/03/27/19/50/bottle-1283184_1280.jpg" alt="1L Water Bottle">
+        <h3>1L Bottles</h3>
+        <p>Perfect for offices, travel, and daily use.</p>
+      </div>
+      <div class="product">
+        <img src="https://cdn.pixabay.com/photo/2017/03/27/13/56/water-2179194_1280.jpg" alt="20L Can">
+        <h3>20L Cans</h3>
+        <p>Ideal for homes and commercial spaces.</p>
+      </div>
+      <div class="product">
+        <img src="https://cdn.pixabay.com/photo/2016/03/27/20/57/bottle-1283187_1280.jpg" alt="Customized Orders">
+        <h3>Bulk & Custom Orders</h3>
+        <p>Events, institutions, and corporate needs covered.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact">
+    <h2>Enquiry Form</h2>
+    <p>Have a question or want to place an order? Fill out the form below and we’ll reach out to you shortly!</p>
+    <form onsubmit="handleSubmit(event)">
+      <input type="text" id="name" placeholder="Your Name" required />
+      <input type="tel" id="phone" placeholder="Your Phone Number" required />
+      <textarea id="message" rows="4" placeholder="Your Message"></textarea>
+      <button type="submit">Send Enquiry</button>
+    </form>
+  </section>
+
+  <footer>
+    <p>📍 Bengaluru | 📞 8074590321</p>
+    <p>© 2025 Sattvaa Water. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function handleSubmit(e) {
+      e.preventDefault();
+      alert('Thank you for your enquiry! We will contact you soon.');
+      e.target.reset();
+    }
+  </script>
+</body>
+</html>
