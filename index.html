@@ -222,7 +222,7 @@
   <script>
     // ========= CONFIG ==========
     const ADMIN_PASSWORD = "sattvaa123"; // Change this password
-    const FORM_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbysJrS0VEwkWhOVNiKIiFemaHgyNmQH14H4hx3UsvWQI_CvEl71DITmVqzdJXbFFd2E/exec"; // 🔹 Paste enquiry form script URL
+    const FORM_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyL9u4sCbJWOp_FrtxtkZp7HgLlYMRS3fZvX88fchWi1DbOpM32d7Iu-7pK5zDo6CFj/exec; // 🔹 Paste enquiry form script URL
     const IMAGE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyzVr11eSwB2OrDJ2R7qKteyuTCPDnQbzkof-1cy10IQT7w5uP7mr6OVzONJhpv0ug/exec"; // 🔹 Paste image upload script URL
     // ===========================
 
@@ -289,31 +289,61 @@
     loadImages();
 
     // Handle enquiry form
-    document.getElementById('enquiryForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const formData = {
-        name: document.getElementById('name').value,
-        phone: document.getElementById('phone').value,
-        message: document.getElementById('message').value
-      };
-      try {
-        const response = await fetch(FORM_SCRIPT_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData)
-        });
-        const data = await response.json();
-        if (data.status === 'success') {
-          alert('✅ Thank you! Your enquiry has been submitted.');
-          e.target.reset();
-        } else {
-          alert('❌ Something went wrong: ' + data.message);
-        }
-      } catch (err) {
-        alert('⚠️ Network error.');
-        console.error(err);
-      }
-    });
+// use the same FORM_SCRIPT_URL variable you already set
+// const FORM_SCRIPT_URL = "..."; // keep as-is
+
+document.getElementById('enquiryForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  const name = document.getElementById('name').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const message = document.getElementById('message').value.trim();
+
+  // Create a hidden iframe to submit the form to (prevents navigation)
+  let iframe = document.getElementById('hidden_iframe_sattvaa');
+  if (!iframe) {
+    iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.id = 'hidden_iframe_sattvaa';
+    document.body.appendChild(iframe);
+  }
+
+  // Create a temporary form
+  const form = document.createElement('form');
+  form.action = FORM_SCRIPT_URL;
+  form.method = 'POST';
+  form.target = iframe.id;
+  form.enctype = 'application/x-www-form-urlencoded';
+
+  // Add inputs
+  const addInput = (nameAttr, value) => {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = nameAttr;
+    input.value = value || '';
+    form.appendChild(input);
+  };
+
+  addInput('name', name);
+  addInput('phone', phone);
+  addInput('message', message);
+
+  document.body.appendChild(form);
+
+  // Submit the form (this does not trigger CORS preflight)
+  form.submit();
+
+  // Clean up the temporary form after a short delay
+  setTimeout(() => {
+    try { form.remove(); } catch (e) {}
+  }, 1000);
+
+  // Show local success to the user (we cannot reliably read response due to cross-origin)
+  alert('✅ Thank you! Your enquiry has been submitted. (If you do not see it, check the sheet.)');
+  e.target.reset();
+});
+</script>
+
   </script>
 </body>
 </html>
