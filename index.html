@@ -1,313 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sattvaa Purified Water</title>
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      background-color: #f8fbff;
-      color: #333;
-    }
+<script>
+  // === Sattvaa Water Website Script ===
 
-    header {
-      background-color: #004aad;
-      color: white;
-      text-align: center;
-      padding: 20px;
-    }
+  // 1️⃣ Enquiry form → Google Sheet
+  const ENQUIRY_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby2gH6ZoOaB9p0M0BjiriuMlRXzT_WLNQ3p3qjw-463VyuOHwmzpLwLNB1N__cgf8ff/exec";
 
-    header img {
-      width: 120px;
-      height: auto;
-      margin-bottom: 10px;
-    }
+  // 2️⃣ Image upload → Google Drive
+  const IMAGE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwP_57ZCN_N7dzkYuZCdo2rAxyXpOdXZCSlBYhp0cJ5YV0Wrw_5IRGKHI5_PeJrUuwz/exec";
 
-    .hero, .products, .contact {
-      padding: 40px 20px;
-      text-align: center;
-    }
+  // === Enquiry Form Handler ===
+  async function handleSubmit(event) {
+    event.preventDefault();
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const message = document.getElementById("message").value.trim();
 
-    .hero img {
-      width: 100%;
-      max-height: 350px;
-      object-fit: cover;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
+    const data = { name, phone, message };
 
-    .product-card {
-      display: inline-block;
-      margin: 20px;
-      background: white;
-      border-radius: 10px;
-      padding: 15px;
-      width: 220px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
+    try {
+      const res = await fetch(ENQUIRY_SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const result = await res.json();
 
-    .product-card img {
-      width: 100%;
-      border-radius: 8px;
-      margin-bottom: 8px;
-    }
-
-    .contact form {
-      max-width: 400px;
-      background: white;
-      margin: 0 auto;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    form input, form textarea {
-      width: 100%;
-      padding: 12px;
-      margin: 8px 0;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 1rem;
-    }
-
-    form button {
-      width: 100%;
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      padding: 14px;
-      border-radius: 8px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
-    }
-
-    form button:hover {
-      background-color: #0056b3;
-      transform: scale(1.02);
-    }
-
-    footer {
-      text-align: center;
-      background-color: #004aad;
-      color: white;
-      padding: 15px;
-      font-size: 0.9rem;
-    }
-
-    /* Admin Panel */
-    #admin-panel {
-      display: none;
-      background: white;
-      max-width: 600px;
-      margin: 40px auto;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-
-    #admin-panel input[type="password"],
-    #admin-panel input[type="file"] {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
-
-    #admin-panel button {
-      background: #007bff;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    #admin-panel button:hover {
-      background: #0056b3;
-    }
-
-    .upload-section {
-      border-top: 1px solid #eee;
-      padding-top: 15px;
-      margin-top: 15px;
-    }
-
-  </style>
-</head>
-
-<body>
-  <header>
-    <img src="images/logo.png" alt="Sattvaa Water Logo" id="logo">
-    <h1>Sattvaa Purified Water</h1>
-    <p>Bengaluru | 📞 8074590321</p>
-  </header>
-
-  <section class="hero">
-    <img src="images/banner.jpg" alt="Banner" id="banner">
-  </section>
-
-  <section class="products">
-    <div class="product-card">
-      <img src="images/bottle1.jpg" alt="1L Bottle" id="prod1">
-      <h3>1L Bottle</h3>
-    </div>
-    <div class="product-card">
-      <img src="images/bottle2.jpg" alt="20L Can" id="prod2">
-      <h3>20L Can</h3>
-    </div>
-    <div class="product-card">
-      <img src="images/bottle3.jpg" alt="Packaged Water" id="prod3">
-      <h3>Packaged Water</h3>
-    </div>
-  </section>
-
-  <section class="contact">
-    <form id="enquiryForm">
-      <h2>Enquiry Form</h2>
-      <input type="text" id="name" placeholder="Your Name" required />
-      <input type="tel" id="phone" placeholder="Your Phone Number" required />
-      <textarea id="message" rows="4" placeholder="Your Message"></textarea>
-      <button type="submit">Send Enquiry</button>
-    </form>
-  </section>
-
-  <!-- Admin Panel -->
-  <section id="admin-panel">
-    <h2>Admin Panel</h2>
-    <input type="password" id="admin-pass" placeholder="Enter Admin Password">
-    <div id="upload-area" style="display:none;">
-
-      <div class="upload-section">
-        <h4>Upload Logo</h4>
-        <input type="file" id="logoFile" accept="image/*">
-        <button onclick="uploadImage('logo')">Upload Logo</button>
-      </div>
-
-      <div class="upload-section">
-        <h4>Upload Banner</h4>
-        <input type="file" id="bannerFile" accept="image/*">
-        <button onclick="uploadImage('banner')">Upload Banner</button>
-      </div>
-
-      <div class="upload-section">
-        <h4>Upload Product 1 (1L Bottle)</h4>
-        <input type="file" id="prod1File" accept="image/*">
-        <button onclick="uploadImage('prod1')">Upload Product 1</button>
-      </div>
-
-      <div class="upload-section">
-        <h4>Upload Product 2 (20L Can)</h4>
-        <input type="file" id="prod2File" accept="image/*">
-        <button onclick="uploadImage('prod2')">Upload Product 2</button>
-      </div>
-
-      <div class="upload-section">
-        <h4>Upload Product 3 (Packaged Water)</h4>
-        <input type="file" id="prod3File" accept="image/*">
-        <button onclick="uploadImage('prod3')">Upload Product 3</button>
-      </div>
-
-      <p id="upload-status"></p>
-    </div>
-  </section>
-
-  <footer>
-    <p>© 2025 Sattvaa Purified Water | Bengaluru</p>
-  </footer>
-
-  <script>
-    // ========= CONFIG ==========
-    const ADMIN_PASSWORD = "sattvaa123"; // Change this password
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby2gH6ZoOaB9p0M0BjiriuMlRXzT_WLNQ3p3qjw-463VyuOHwmzpLwLNB1N__cgf8ff/exec"; // 👈 Paste your Apps Script URL ending with /exec
-    // ===========================
-
-    // Show admin panel only if URL has ?admin=true
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('admin') === 'true') {
-      document.getElementById('admin-panel').style.display = 'block';
-    }
-
-    // Handle admin login
-    const passInput = document.getElementById('admin-pass');
-    passInput.addEventListener('change', () => {
-      if (passInput.value === ADMIN_PASSWORD) {
-        document.getElementById('upload-area').style.display = 'block';
+      if (result.status === "success") {
+        alert("✅ Thank you! Your enquiry has been sent successfully.");
+        document.querySelector("form").reset();
       } else {
-        alert('Incorrect password');
+        alert("⚠️ Something went wrong: " + result.message);
       }
-    });
+    } catch (err) {
+      alert("⚠️ Error submitting form: " + err.message);
+    }
+  }
 
-    // Upload specific image
-    async function uploadImage(type) {
-      const file = document.getElementById(type + 'File').files[0];
-      if (!file) return alert("Please select an image");
+  // === Admin Image Upload Panel ===
+  async function uploadImage(event, type) {
+    event.preventDefault();
+    const fileInput = document.getElementById(`${type}-file`);
+    const file = fileInput.files[0];
+    if (!file) return alert("⚠️ Please select an image first!");
 
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('type', type);
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("type", type);
 
-      document.getElementById('upload-status').textContent = `Uploading ${type}...`;
+    try {
+      const res = await fetch(IMAGE_SCRIPT_URL, { method: "POST", body: formData });
+      const result = await res.json();
 
-      const response = await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: formData });
-      const data = await response.json();
-
-      if (data.status === 'success') {
-        document.getElementById('upload-status').innerHTML =
-          `✅ ${type} uploaded successfully! <br> <a href="${data.url}" target="_blank">View</a>`;
-        loadImages();
+      if (result.status === "success") {
+        alert(`✅ ${type.toUpperCase()} image uploaded successfully!`);
+        loadImages(); // refresh images after upload
       } else {
-        document.getElementById('upload-status').textContent = '❌ Upload failed!';
+        alert("⚠️ Upload failed: " + result.message);
       }
+    } catch (err) {
+      alert("⚠️ Upload error: " + err.message);
     }
+  }
 
-    // Load images from Google Drive (auto-refresh)
-    async function loadImages() {
-      try {
-        const res = await fetch(GOOGLE_SCRIPT_URL);
-        const data = await res.json();
-        if (data.status === "success") {
-          const imgs = data.images;
-          imgs.forEach(img => {
-            const el = document.getElementById(img.type);
-            if (el) el.src = img.url;
-          });
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    // Auto-load on startup
-    loadImages();
-
-    // Enquiry form (Google Sheets)
-    document.getElementById('enquiryForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const formData = {
-        name: document.getElementById('name').value,
-        phone: document.getElementById('phone').value,
-        message: document.getElementById('message').value
-      };
-      try {
-        const response = await fetch(GOOGLE_SCRIPT_URL, {
-          method: 'POST',
-          body: JSON.stringify(formData)
+  // === Load Current Images from Drive ===
+  async function loadImages() {
+    try {
+      const res = await fetch(IMAGE_SCRIPT_URL);
+      const result = await res.json();
+      if (result.status === "success" && result.images) {
+        result.images.forEach(img => {
+          if (img.type === "logo") document.getElementById("logo-preview").src = img.url;
+          if (img.type === "banner") document.getElementById("banner-preview").src = img.url;
+          if (img.type === "product") document.getElementById("product-preview").src = img.url;
         });
-        if (response.ok) {
-          alert('✅ Thank you! Your enquiry has been submitted.');
-          e.target.reset();
-        } else {
-          alert('❌ Something went wrong.');
-        }
-      } catch {
-        alert('⚠️ Network error.');
       }
-    });
-  </script>
-</body>
-</html>
+    } catch (err) {
+      console.error("Error loading images:", err);
+    }
+  }
+
+  // === Show Admin Panel ===
+  function checkAdmin() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("admin") === "true") {
+      document.getElementById("admin-panel").style.display = "block";
+    }
+  }
+
+  // Initialize page
+  window.onload = function() {
+    checkAdmin();
+    loadImages();
+  };
+</script>
