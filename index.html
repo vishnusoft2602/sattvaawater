@@ -1,94 +1,183 @@
-<script>
-  // === Sattvaa Water Website Script ===
-
-  // 1️⃣ Enquiry form → Google Sheet
-  const ENQUIRY_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby2gH6ZoOaB9p0M0BjiriuMlRXzT_WLNQ3p3qjw-463VyuOHwmzpLwLNB1N__cgf8ff/exec";
-
-  // 2️⃣ Image upload → Google Drive
-  const IMAGE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwP_57ZCN_N7dzkYuZCdo2rAxyXpOdXZCSlBYhp0cJ5YV0Wrw_5IRGKHI5_PeJrUuwz/exec";
-
-  // === Enquiry Form Handler ===
-  async function handleSubmit(event) {
-    event.preventDefault();
-    const name = document.getElementById("name").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-    const message = document.getElementById("message").value.trim();
-
-    const data = { name, phone, message };
-
-    try {
-      const res = await fetch(ENQUIRY_SCRIPT_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-      const result = await res.json();
-
-      if (result.status === "success") {
-        alert("✅ Thank you! Your enquiry has been sent successfully.");
-        document.querySelector("form").reset();
-      } else {
-        alert("⚠️ Something went wrong: " + result.message);
-      }
-    } catch (err) {
-      alert("⚠️ Error submitting form: " + err.message);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sattvaa Water | Purified Water in Bengaluru</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background-color: #f0f8ff;
+      color: #333;
+      text-align: center;
     }
-  }
-
-  // === Admin Image Upload Panel ===
-  async function uploadImage(event, type) {
-    event.preventDefault();
-    const fileInput = document.getElementById(`${type}-file`);
-    const file = fileInput.files[0];
-    if (!file) return alert("⚠️ Please select an image first!");
-
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("type", type);
-
-    try {
-      const res = await fetch(IMAGE_SCRIPT_URL, { method: "POST", body: formData });
-      const result = await res.json();
-
-      if (result.status === "success") {
-        alert(`✅ ${type.toUpperCase()} image uploaded successfully!`);
-        loadImages(); // refresh images after upload
-      } else {
-        alert("⚠️ Upload failed: " + result.message);
-      }
-    } catch (err) {
-      alert("⚠️ Upload error: " + err.message);
+    header {
+      background-color: #0077cc;
+      color: white;
+      padding: 20px;
     }
-  }
+    h1 { margin: 0; }
+    .banner img, .product img, #logo-preview {
+      max-width: 300px;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      margin: 15px;
+    }
+    .contact form {
+      background: white;
+      padding: 20px;
+      max-width: 400px;
+      margin: 20px auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    input, textarea, button {
+      width: 90%;
+      margin: 8px 0;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #0077cc;
+      color: white;
+      cursor: pointer;
+    }
+    #admin-panel {
+      display: none;
+      background: #e8f6ff;
+      padding: 20px;
+      margin: 20px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img id="logo-preview" src="" alt="Sattvaa Logo" height="80" />
+    <h1>Sattvaa Water</h1>
+    <p>Purified Drinking Water | Bengaluru</p>
+  </header>
 
-  // === Load Current Images from Drive ===
-  async function loadImages() {
-    try {
-      const res = await fetch(IMAGE_SCRIPT_URL);
-      const result = await res.json();
-      if (result.status === "success" && result.images) {
-        result.images.forEach(img => {
-          if (img.type === "logo") document.getElementById("logo-preview").src = img.url;
-          if (img.type === "banner") document.getElementById("banner-preview").src = img.url;
-          if (img.type === "product") document.getElementById("product-preview").src = img.url;
+  <section class="banner">
+    <img id="banner-preview" src="" alt="Banner Image" />
+  </section>
+
+  <section class="product">
+    <h2>Our Products</h2>
+    <img id="product-preview" src="" alt="Product Image" />
+  </section>
+
+  <section class="contact">
+    <h2>Enquiry Form</h2>
+    <form onsubmit="handleSubmit(event)">
+      <input type="text" id="name" placeholder="Your Name" required />
+      <input type="tel" id="phone" placeholder="Your Phone Number" required />
+      <textarea id="message" rows="4" placeholder="Your Message"></textarea>
+      <button type="submit">Send Enquiry</button>
+    </form>
+  </section>
+
+  <section id="admin-panel">
+    <h2>Admin Panel – Upload Images</h2>
+    <form onsubmit="uploadImage(event, 'logo')">
+      <label>Upload Logo:</label>
+      <input type="file" id="logo-file" accept="image/*" required />
+      <button type="submit">Upload Logo</button>
+    </form>
+    <form onsubmit="uploadImage(event, 'banner')">
+      <label>Upload Banner:</label>
+      <input type="file" id="banner-file" accept="image/*" required />
+      <button type="submit">Upload Banner</button>
+    </form>
+    <form onsubmit="uploadImage(event, 'product')">
+      <label>Upload Product Image:</label>
+      <input type="file" id="product-file" accept="image/*" required />
+      <button type="submit">Upload Product</button>
+    </form>
+  </section>
+
+  <!-- Your full working JS script -->
+  <script>
+    // === URLs ===
+    const ENQUIRY_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby2gH6ZoOaB9p0M0BjiriuMlRXzT_WLNQ3p3qjw-463VyuOHwmzpLwLNB1N__cgf8ff/exec";
+    const IMAGE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwP_57ZCN_N7dzkYuZCdo2rAxyXpOdXZCSlBYhp0cJ5YV0Wrw_5IRGKHI5_PeJrUuwz/exec";
+
+    async function handleSubmit(event) {
+      event.preventDefault();
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const message = document.getElementById("message").value.trim();
+      const data = { name, phone, message };
+
+      try {
+        const res = await fetch(ENQUIRY_SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
         });
+        const result = await res.json();
+        if (result.status === "success") {
+          alert("✅ Enquiry sent successfully!");
+          document.querySelector("form").reset();
+        } else {
+          alert("⚠️ " + result.message);
+        }
+      } catch (err) {
+        alert("⚠️ " + err.message);
       }
-    } catch (err) {
-      console.error("Error loading images:", err);
     }
-  }
 
-  // === Show Admin Panel ===
-  function checkAdmin() {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get("admin") === "true") {
-      document.getElementById("admin-panel").style.display = "block";
+    async function uploadImage(event, type) {
+      event.preventDefault();
+      const file = document.getElementById(`${type}-file`).files[0];
+      if (!file) return alert("Please select an image!");
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("type", type);
+      try {
+        const res = await fetch(IMAGE_SCRIPT_URL, { method: "POST", body: formData });
+        const result = await res.json();
+        if (result.status === "success") {
+          alert(`${type} uploaded!`);
+          loadImages();
+        } else {
+          alert("Upload failed: " + result.message);
+        }
+      } catch (err) {
+        alert("Error: " + err.message);
+      }
     }
-  }
 
-  // Initialize page
-  window.onload = function() {
-    checkAdmin();
-    loadImages();
-  };
-</script>
+    async function loadImages() {
+      try {
+        const res = await fetch(IMAGE_SCRIPT_URL);
+        const result = await res.json();
+        if (result.status === "success" && result.images) {
+          result.images.forEach(img => {
+            if (img.type === "logo") document.getElementById("logo-preview").src = img.url;
+            if (img.type === "banner") document.getElementById("banner-preview").src = img.url;
+            if (img.type === "product") document.getElementById("product-preview").src = img.url;
+          });
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function checkAdmin() {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get("admin") === "true") {
+        document.getElementById("admin-panel").style.display = "block";
+      }
+    }
+
+    window.onload = function() {
+      checkAdmin();
+      loadImages();
+    };
+  </script>
+</body>
+</html>
