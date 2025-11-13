@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -136,6 +137,7 @@
       padding-top: 15px;
       margin-top: 15px;
     }
+
   </style>
 </head>
 
@@ -222,11 +224,10 @@
   <script>
     // ========= CONFIG ==========
     const ADMIN_PASSWORD = "sattvaa123"; // Change this password
-    const FORM_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby_8ZBOWOPyfejoGWOnIOTt0TV5Rc_UVZMXP7ANxP9sV1l4pSWI7pGGWBSCnNKo6CRc/exec; // 🔹 Paste enquiry form script URL
-    // const IMAGE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyzVr11eSwB2OrDJ2R7qKteyuTCPDnQbzkof-1cy10IQT7w5uP7mr6OVzONJhpv0ug/exec"; // 🔹 Paste image upload script URL
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby_8ZBOWOPyfejoGWOnIOTt0TV5Rc_UVZMXP7ANxP9sV1l4pSWI7pGGWBSCnNKo6CRc/exec"; // 👈 Paste your Apps Script URL ending with /exec
     // ===========================
 
-    // Show admin panel if URL has ?admin=true
+    // Show admin panel only if URL has ?admin=true
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('admin') === 'true') {
       document.getElementById('admin-panel').style.display = 'block';
@@ -242,7 +243,7 @@
       }
     });
 
-    // Upload image
+    // Upload specific image
     async function uploadImage(type) {
       const file = document.getElementById(type + 'File').files[0];
       if (!file) return alert("Please select an image");
@@ -253,29 +254,26 @@
 
       document.getElementById('upload-status').textContent = `Uploading ${type}...`;
 
-      try {
-        const response = await fetch(IMAGE_SCRIPT_URL, { method: 'POST', body: formData });
-        const data = await response.json();
+      const response = await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: formData });
+      const data = await response.json();
 
-        if (data.status === 'success') {
-          document.getElementById('upload-status').innerHTML =
-            `✅ ${type} uploaded successfully! <br><a href="${data.url}" target="_blank">View</a>`;
-          loadImages();
-        } else {
-          document.getElementById('upload-status').textContent = '❌ Upload failed!';
-        }
-      } catch {
-        document.getElementById('upload-status').textContent = '⚠️ Network error.';
+      if (data.status === 'success') {
+        document.getElementById('upload-status').innerHTML =
+          `✅ ${type} uploaded successfully! <br> <a href="${data.url}" target="_blank">View</a>`;
+        loadImages();
+      } else {
+        document.getElementById('upload-status').textContent = '❌ Upload failed!';
       }
     }
 
-    // Load images dynamically
+    // Load images from Google Drive (auto-refresh)
     async function loadImages() {
       try {
-        const res = await fetch(IMAGE_SCRIPT_URL);
+        const res = await fetch(GOOGLE_SCRIPT_URL);
         const data = await res.json();
         if (data.status === "success") {
-          data.images.forEach(img => {
+          const imgs = data.images;
+          imgs.forEach(img => {
             const el = document.getElementById(img.type);
             if (el) el.src = img.url;
           });
@@ -288,62 +286,29 @@
     // Auto-load on startup
     loadImages();
 
-    // Handle enquiry form
-// use the same FORM_SCRIPT_URL variable you already set
-// const FORM_SCRIPT_URL = "..."; // keep as-is
-
-document.getElementById('enquiryForm').addEventListener('submit', function (e) {
-  e.preventDefault();
-
-  const name = document.getElementById('name').value.trim();
-  const phone = document.getElementById('phone').value.trim();
-  const message = document.getElementById('message').value.trim();
-
-  // Create a hidden iframe to submit the form to (prevents navigation)
-  let iframe = document.getElementById('hidden_iframe_sattvaa');
-  if (!iframe) {
-    iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
-    iframe.id = 'hidden_iframe_sattvaa';
-    document.body.appendChild(iframe);
-  }
-
-  // Create a temporary form
-  const form = document.createElement('form');
-  form.action = FORM_SCRIPT_URL;
-  form.method = 'POST';
-  form.target = iframe.id;
-  form.enctype = 'application/x-www-form-urlencoded';
-
-  // Add inputs
-  const addInput = (nameAttr, value) => {
-    const input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = nameAttr;
-    input.value = value || '';
-    form.appendChild(input);
-  };
-
-  addInput('name', name);
-  addInput('phone', phone);
-  addInput('message', message);
-
-  document.body.appendChild(form);
-
-  // Submit the form (this does not trigger CORS preflight)
-  form.submit();
-
-  // Clean up the temporary form after a short delay
-  setTimeout(() => {
-    try { form.remove(); } catch (e) {}
-  }, 1000);
-
-  // Show local success to the user (we cannot reliably read response due to cross-origin)
-  alert('✅ Thank you! Your enquiry has been submitted. (If you do not see it, check the sheet.)');
-  e.target.reset();
-});
-</script>
-
+    // Enquiry form (Google Sheets)
+    document.getElementById('enquiryForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = {
+        name: document.getElementById('name').value,
+        phone: document.getElementById('phone').value,
+        message: document.getElementById('message').value
+      };
+      try {
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify(formData)
+        });
+        if (response.ok) {
+          alert('✅ Thank you! Your enquiry has been submitted.');
+          e.target.reset();
+        } else {
+          alert('❌ Something went wrong.');
+        }
+      } catch {
+        alert('⚠️ Network error.');
+      }
+    });
   </script>
 </body>
 </html>
