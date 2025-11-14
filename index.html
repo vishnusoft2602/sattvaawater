@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sattvaa Purified Water</title>
 <style>
-body { font-family:'Poppins',sans-serif; margin:0; background:#f8fbff; color:#333; }
-header { background:#004aad; color:#fff; text-align:center; padding:20px; }
+body { font-family:'Poppins', sans-serif; margin:0; background:#f8fbff; color:#333; }
+header { background:#004aad; color:white; text-align:center; padding:20px; }
 header img { width:120px; }
 .hero, .products, .contact { padding:40px 20px; text-align:center; }
 .hero img { width:100%; max-height:350px; object-fit:cover; border-radius:10px; }
@@ -23,19 +23,25 @@ footer { background:#004aad; color:white; text-align:center; padding:10px; margi
 <body>
 
 <header>
-<img src="images/logo.png" id="logo">
-<h1>Sattvaa Purified Water</h1>
-<p>Bengaluru | 📞 8074590321</p>
+  <img src="images/logo.png" id="logo">
+  <h1>Sattvaa Purified Water</h1>
+  <p>Bengaluru | 📞 8074590321</p>
 </header>
 
 <section class="hero">
-<img src="images/banner.jpg" id="banner">
+  <img src="images/banner.jpg" id="banner">
 </section>
 
 <section class="products">
-<div class="product-card"><img id="prod1" src="images/bottle1.jpg"><h3>1L Bottle</h3></div>
-<div class="product-card"><img id="prod2" src="images/bottle2.jpg"><h3>20L Can</h3></div>
-<div class="product-card"><img id="prod3" src="images/bottle3.jpg"><h3>Packaged Water</h3></div>
+  <div class="product-card">
+    <img id="prod1" src="images/bottle1.jpg"><h3>1L Bottle</h3>
+  </div>
+  <div class="product-card">
+    <img id="prod2" src="images/bottle2.jpg"><h3>20L Can</h3>
+  </div>
+  <div class="product-card">
+    <img id="prod3" src="images/bottle3.jpg"><h3>Packaged Water</h3>
+  </div>
 </section>
 
 <section class="contact">
@@ -50,13 +56,18 @@ footer { background:#004aad; color:white; text-align:center; padding:10px; margi
 
 <section id="admin-panel">
 <h2>Admin Panel</h2>
-<input id="admin-pass" type="password" placeholder="Enter Password">
+<input id="admin-pass" type="password" placeholder="Enter Admin Password">
 <div id="upload-area" style="display:none;">
-<p><b>Upload Logo</b></p><input type="file" id="logo-input"><button onclick="uploadImage('logo')">Upload</button>
-<p><b>Upload Banner</b></p><input type="file" id="banner-input"><button onclick="uploadImage('banner')">Upload</button>
-<p><b>Upload Product 1</b></p><input type="file" id="prod1-input"><button onclick="uploadImage('prod1')">Upload</button>
-<p><b>Upload Product 2</b></p><input type="file" id="prod2-input"><button onclick="uploadImage('prod2')">Upload</button>
-<p><b>Upload Product 3</b></p><input type="file" id="prod3-input"><button onclick="uploadImage('prod3')">Upload</button>
+<p><b>Upload Logo</b></p>
+<input type="file" id="logo-input"><button onclick="uploadImage('logo')">Upload</button>
+<p><b>Upload Banner</b></p>
+<input type="file" id="banner-input"><button onclick="uploadImage('banner')">Upload</button>
+<p><b>Upload Product 1</b></p>
+<input type="file" id="prod1-input"><button onclick="uploadImage('prod1')">Upload</button>
+<p><b>Upload Product 2</b></p>
+<input type="file" id="prod2-input"><button onclick="uploadImage('prod2')">Upload</button>
+<p><b>Upload Product 3</b></p>
+<input type="file" id="prod3-input"><button onclick="uploadImage('prod3')">Upload</button>
 <p id="upload-status"></p>
 </div>
 </section>
@@ -65,54 +76,61 @@ footer { background:#004aad; color:white; text-align:center; padding:10px; margi
 
 <script>
 const ADMIN_PASSWORD = "sattvaa123";
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbweymBa_oYC2E5FuT0CUhabd7jkscTZnqWJ5-p_aOh6LYo-VI-hCfwJePpBjOjJ0qbr/exec"; // replace with your deployed Apps Script URL
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwFg-H2sIVV9iLO6yHZ7dgJYvLi0JbkImOk5TqcpnTDFYPkjs7V8Lqp4Zk1rKK2ZCyR/exec";
 
-// Admin panel visibility
-if (new URLSearchParams(location.search).get("admin")==="true") {
+// Admin login
+if (new URLSearchParams(window.location.search).get("admin")==="true") {
   document.getElementById("admin-panel").style.display="block";
 }
-document.getElementById("admin-pass").addEventListener("change",()=>{
-  if(document.getElementById("admin-pass").value===ADMIN_PASSWORD){
+document.getElementById("admin-pass").addEventListener("change", ()=>{
+  if(document.getElementById("admin-pass").value===ADMIN_PASSWORD)
     document.getElementById("upload-area").style.display="block";
-  } else alert("Incorrect password");
+  else alert("Incorrect password");
 });
 
-// Upload Image as Base64
+// Image upload
 async function uploadImage(type){
   const input=document.getElementById(type+"-input");
   if(!input.files.length) return alert("Select image first");
   const file=input.files[0];
-  const reader=new FileReader();
-  reader.readAsDataURL(file);
-  reader.onload=async ()=>{
-    const base64=reader.result.split(",")[1];
-    const body={type:type,fileName:type+"_"+Date.now()+".png",fileBase64:base64};
-    const res=await fetch(GOOGLE_SCRIPT_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
-    const data=await res.json();
-    document.getElementById("upload-status").innerText=JSON.stringify(data);
-    if(data.status==="success") document.getElementById(type).src=data.url;
-  };
+  const formData=new FormData();
+  formData.append("file",file);
+  formData.append("fileName", type+"_"+Date.now()+".png");
+  formData.append("type", type);
+  const res=await fetch(GOOGLE_SCRIPT_URL,{method:"POST",body:formData});
+  const data=await res.json();
+  document.getElementById("upload-status").innerText=JSON.stringify(data);
+  if(data.status==="success") document.getElementById(type).src=data.url;
 }
 
 // Load images
 async function loadImages(){
   const res=await fetch(GOOGLE_SCRIPT_URL);
   const data=await res.json();
-  if(data.status==="success") data.images.forEach(img=>{
-    const el=document.getElementById(img.name.split("_")[0]);
-    if(el) el.src=img.url;
-  });
+  if(data.status==="success"){
+    data.images.forEach(img=>{
+      const el=document.getElementById(img.name.split("_")[0]);
+      if(el) el.src=img.url;
+    });
+  }
 }
 loadImages();
 
 // Enquiry form
-document.getElementById("enquiryForm").addEventListener("submit",async e=>{
+document.getElementById("enquiryForm").addEventListener("submit", async e=>{
   e.preventDefault();
-  const body={name:document.getElementById("name").value,phone:document.getElementById("phone").value,message:document.getElementById("message").value};
-  const res=await fetch(GOOGLE_SCRIPT_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+  const body={
+    name: document.getElementById("name").value,
+    phone: document.getElementById("phone").value,
+    message: document.getElementById("message").value
+  };
+  const res=await fetch(GOOGLE_SCRIPT_URL,{
+    method:"POST",
+    body: JSON.stringify(body),
+    headers: {"Content-Type":"application/json"}
+  });
   const data=await res.json();
-  if(data.status==="success") alert("✅ Enquiry submitted!");
-  else alert("❌ "+data.message);
+  alert(data.message || "Enquiry submitted!");
   e.target.reset();
 });
 </script>
