@@ -1,157 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sattvaa Purified Water</title>
-  <style>
-    body { font-family:'Poppins', sans-serif; margin:0; background:#f8fbff; color:#333; }
-    header { background:#004aad; color:white; text-align:center; padding:20px; }
-    header img { width:120px; }
-    .hero, .products, .contact { padding:40px 20px; text-align:center; }
-    .hero img { width:100%; max-height:350px; object-fit:cover; border-radius:10px; }
-    .product-card { display:inline-block; margin:20px; background:white; border-radius:10px; padding:15px; width:220px; }
-    .product-card img { width:100%; border-radius:8px; }
-    form { background:white; max-width:400px; margin:auto; padding:20px; border-radius:10px; }
-    form input, form textarea { width:100%; padding:10px; margin:10px 0; border-radius:8px; border:1px solid #ccc; }
-    form button { background:#007bff; color:white; border:0; padding:12px; border-radius:8px; cursor:pointer; }
-    footer { background:#004aad; color:white; text-align:center; padding:10px; margin-top:40px; }
-    #admin-panel { display:none; max-width:600px; margin:40px auto; background:white; padding:20px; border-radius:10px; }
-    #admin-panel input[type="file"], #admin-panel input[type="password"] { width:100%; margin-bottom:10px; }
-    #upload-status { margin-top:10px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sattvaa Purified Water</title>
+<style>
+body { font-family:'Poppins',sans-serif; margin:0; background:#f8fbff; color:#333; }
+header { background:#004aad; color:#fff; text-align:center; padding:20px; }
+header img { width:120px; }
+.hero, .products, .contact { padding:40px 20px; text-align:center; }
+.hero img { width:100%; max-height:350px; object-fit:cover; border-radius:10px; }
+.product-card { display:inline-block; margin:20px; background:white; border-radius:10px; padding:15px; width:220px; }
+.product-card img { width:100%; border-radius:8px; }
+form { background:white; max-width:400px; margin:auto; padding:20px; border-radius:10px; }
+form input, form textarea { width:100%; padding:10px; margin:10px 0; border-radius:8px; border:1px solid #ccc; }
+form button { background:#007bff; color:white; border:0; padding:12px; border-radius:8px; cursor:pointer; }
+footer { background:#004aad; color:white; text-align:center; padding:10px; margin-top:40px;}
+#admin-panel { display:none; max-width:600px; margin:40px auto; background:white; padding:20px; border-radius:10px; }
+#admin-panel input[type="file"] { width:100%; }
+</style>
 </head>
 <body>
 
 <header>
-  <img src="images/logo.png" id="logo">
-  <h1>Sattvaa Purified Water</h1>
-  <p>Bengaluru | 📞 8074590321</p>
+<img src="images/logo.png" id="logo">
+<h1>Sattvaa Purified Water</h1>
+<p>Bengaluru | 📞 8074590321</p>
 </header>
 
 <section class="hero">
-  <img src="images/banner.jpg" id="banner">
+<img src="images/banner.jpg" id="banner">
 </section>
 
 <section class="products">
-  <div class="product-card"><img id="prod1" src="images/bottle1.jpg"><h3>1L Bottle</h3></div>
-  <div class="product-card"><img id="prod2" src="images/bottle2.jpg"><h3>20L Can</h3></div>
-  <div class="product-card"><img id="prod3" src="images/bottle3.jpg"><h3>Packaged Water</h3></div>
+<div class="product-card"><img id="prod1" src="images/bottle1.jpg"><h3>1L Bottle</h3></div>
+<div class="product-card"><img id="prod2" src="images/bottle2.jpg"><h3>20L Can</h3></div>
+<div class="product-card"><img id="prod3" src="images/bottle3.jpg"><h3>Packaged Water</h3></div>
 </section>
 
 <section class="contact">
-  <form id="enquiryForm">
-    <h2>Enquiry Form</h2>
-    <input type="text" id="name" placeholder="Your Name" required>
-    <input type="tel" id="phone" placeholder="Phone Number" required>
-    <textarea id="message" placeholder="Message"></textarea>
-    <button type="submit">Send Enquiry</button>
-  </form>
+<form id="enquiryForm">
+<h2>Enquiry Form</h2>
+<input type="text" id="name" placeholder="Your Name" required>
+<input type="tel" id="phone" placeholder="Phone Number" required>
+<textarea id="message" placeholder="Message"></textarea>
+<button type="submit">Send Enquiry</button>
+</form>
 </section>
 
 <section id="admin-panel">
-  <h2>Admin Panel</h2>
-  <input type="password" id="admin-pass" placeholder="Enter Password">
-  <div id="upload-area" style="display:none;">
-    <p><b>Upload Logo</b></p>
-    <input type="file" id="logo-input">
-    <button onclick="uploadImage('logo')">Upload</button>
-
-    <p><b>Upload Banner</b></p>
-    <input type="file" id="banner-input">
-    <button onclick="uploadImage('banner')">Upload</button>
-
-    <p><b>Upload Product 1</b></p>
-    <input type="file" id="prod1-input">
-    <button onclick="uploadImage('prod1')">Upload</button>
-
-    <p><b>Upload Product 2</b></p>
-    <input type="file" id="prod2-input">
-    <button onclick="uploadImage('prod2')">Upload</button>
-
-    <p><b>Upload Product 3</b></p>
-    <input type="file" id="prod3-input">
-    <button onclick="uploadImage('prod3')">Upload</button>
-
-    <p id="upload-status"></p>
-  </div>
+<h2>Admin Panel</h2>
+<input id="admin-pass" type="password" placeholder="Enter Password">
+<div id="upload-area" style="display:none;">
+<p><b>Upload Logo</b></p><input type="file" id="logo-input"><button onclick="uploadImage('logo')">Upload</button>
+<p><b>Upload Banner</b></p><input type="file" id="banner-input"><button onclick="uploadImage('banner')">Upload</button>
+<p><b>Upload Product 1</b></p><input type="file" id="prod1-input"><button onclick="uploadImage('prod1')">Upload</button>
+<p><b>Upload Product 2</b></p><input type="file" id="prod2-input"><button onclick="uploadImage('prod2')">Upload</button>
+<p><b>Upload Product 3</b></p><input type="file" id="prod3-input"><button onclick="uploadImage('prod3')">Upload</button>
+<p id="upload-status"></p>
+</div>
 </section>
 
 <footer>© 2025 Sattvaa Purified Water</footer>
 
 <script>
 const ADMIN_PASSWORD = "sattvaa123";
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbypZYjz4U2lxDKY9_Hh8wBCJmqu1F6NngXoBnzo-Y5TmsjOfiuZYjuTUj31ddP-7Bg/exec";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbweymBa_oYC2E5FuT0CUhabd7jkscTZnqWJ5-p_aOh6LYo-VI-hCfwJePpBjOjJ0qbr/exec"; // replace with your deployed Apps Script URL
 
-// Show admin panel if URL has ?admin=true
-if(new URLSearchParams(location.search).get("admin")==="true"){
+// Admin panel visibility
+if (new URLSearchParams(location.search).get("admin")==="true") {
   document.getElementById("admin-panel").style.display="block";
 }
-
-// Admin password check
 document.getElementById("admin-pass").addEventListener("change",()=>{
   if(document.getElementById("admin-pass").value===ADMIN_PASSWORD){
     document.getElementById("upload-area").style.display="block";
-  } else { alert("Incorrect password"); }
+  } else alert("Incorrect password");
 });
 
-// Image upload function
+// Upload Image as Base64
 async function uploadImage(type){
   const input=document.getElementById(type+"-input");
-  if(!input.files.length){ alert("Select image first"); return; }
-
+  if(!input.files.length) return alert("Select image first");
   const file=input.files[0];
-  const formData=new FormData();
-  formData.append("file", file);
-  formData.append("fileName", type+"_"+Date.now()+".png");
-  formData.append("type", type);
-
-  try{
-    const res=await fetch(GOOGLE_SCRIPT_URL,{method:"POST",body:formData});
+  const reader=new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload=async ()=>{
+    const base64=reader.result.split(",")[1];
+    const body={type:type,fileName:type+"_"+Date.now()+".png",fileBase64:base64};
+    const res=await fetch(GOOGLE_SCRIPT_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
     const data=await res.json();
     document.getElementById("upload-status").innerText=JSON.stringify(data);
-    if(data.status==="success"){ document.getElementById(type).src=data.url; }
-  }catch(err){ alert("Upload failed: "+err); }
+    if(data.status==="success") document.getElementById(type).src=data.url;
+  };
 }
 
-// Load existing images
+// Load images
 async function loadImages(){
-  try{
-    const res=await fetch(GOOGLE_SCRIPT_URL);
-    const data=await res.json();
-    if(data.status==="success"){
-      data.images.forEach(img=>{
-        const el=document.getElementById(img.type);
-        if(el) el.src=img.url;
-      });
-    }
-  }catch(err){ console.error(err); }
+  const res=await fetch(GOOGLE_SCRIPT_URL);
+  const data=await res.json();
+  if(data.status==="success") data.images.forEach(img=>{
+    const el=document.getElementById(img.name.split("_")[0]);
+    if(el) el.src=img.url;
+  });
 }
 loadImages();
 
-// Enquiry form submission
-document.getElementById("enquiryForm").addEventListener("submit", async e=>{
+// Enquiry form
+document.getElementById("enquiryForm").addEventListener("submit",async e=>{
   e.preventDefault();
-  const payload={
-    name:document.getElementById("name").value,
-    phone:document.getElementById("phone").value,
-    message:document.getElementById("message").value
-  };
-  try{
-    const res=await fetch(GOOGLE_SCRIPT_URL,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify(payload)
-    });
-    const data=await res.json();
-    if(data.status==="success"){
-      alert("✅ Enquiry submitted!");
-      e.target.reset();
-    } else {
-      alert("❌ Error: "+data.message);
-    }
-  }catch(err){ alert("⚠️ Network error: "+err); }
+  const body={name:document.getElementById("name").value,phone:document.getElementById("phone").value,message:document.getElementById("message").value};
+  const res=await fetch(GOOGLE_SCRIPT_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+  const data=await res.json();
+  if(data.status==="success") alert("✅ Enquiry submitted!");
+  else alert("❌ "+data.message);
+  e.target.reset();
 });
 </script>
+
 </body>
 </html>
